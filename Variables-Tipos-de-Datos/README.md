@@ -1,6 +1,6 @@
 # Variables y Tipos de Datos en Kotlin
 
-Introducción
+## Introducción
 
 En Kotlin, las variables son esenciales para almacenar información y operar con ella dentro de un programa. Podemos pensar en ellas como cajas donde guardamos datos con un nombre específico. Cada variable tiene un tipo de dato que define qué clase de valores puede contener.
 
@@ -18,7 +18,7 @@ Char: Almacena un único carácter, como 'A', '?' o '9'.
 
 String: Representa cadenas de texto, como "Hola Mundo".
 
-Declaración de Variables en Kotlin
+## Declaración de Variables en Kotlin
 
 En Kotlin, podemos definir variables de dos formas principales:
 
