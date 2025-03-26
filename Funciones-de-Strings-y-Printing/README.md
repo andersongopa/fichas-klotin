@@ -53,6 +53,41 @@ println("""
 """)
 ```
 
+## Codigo 
+
+fun main() {
+    // Declaración de Strings
+    val nombre = "Kotlin"
+    val mensaje = "Bienvenido a la programación con $nombre!"
+    println(mensaje)
+
+    // Operaciones con Strings
+    val texto = "Lenguaje Kotlin"
+    println("Texto original: $texto")
+    println("Mayúsculas: ${texto.uppercase()}")
+    println("Minúsculas: ${texto.lowercase()}")
+    println("Reemplazo: ${texto.replace("Kotlin", "Java")}")
+    println("¿Contiene 'Kotlin'? ${texto.contains("Kotlin")}")
+    println("Longitud del texto: ${texto.length}")
+
+    // Acceder a caracteres específicos
+    println("Primer carácter: ${texto[0]}")
+    println("Último carácter: ${texto[texto.length - 1]}")
+
+    // Uso de Strings multilínea
+    val info = """
+        Nombre: $nombre
+        Tipo: Lenguaje de programación
+        Propósito: Desarrollo de aplicaciones multiplataforma
+    """.trimIndent()
+    println(info)
+
+    // Uso de print y println
+    print("Este texto se imprime en la misma línea. ")
+    println("Este texto se imprime en una nueva línea.")
+}
+
+
 
 
 
