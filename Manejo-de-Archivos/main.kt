@@ -1,60 +1,36 @@
-import java.io.File
-import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
+
+class CacheSimple<Clave, Valor> {
+    private val almacenamientoCache = ConcurrentHashMap<Clave, Valor>()
+
+    fun obtener(clave: Clave, obtenerValor: () -> Valor): Valor {
+        return almacenamientoCache.getOrPut(clave) {
+            println("Obteniendo valor para la clave: $clave")
+            obtenerValor()
+        }
+    }
+
+    fun invalidar(clave: Clave) {
+        almacenamientoCache.remove(clave)
+        println("Clave invalidada: $clave")
+    }
+}
 
 fun main() {
-    val nombreArchivo = "miarchivo.txt"
-    val contenido = "Hola, mundo! Esto es un ejemplo de manejo de archivos en Kotlin."
+    val miCache = CacheSimple<String, String>()
 
-    // 1. Escritura de un archivo
-    // Se crea un archivo y se escribe contenido en él.
-    try {
-        File(nombreArchivo).writeText(contenido)
-        println("Archivo '$nombreArchivo' escrito correctamente.")
-    } catch (e: IOException) {
-        println("Error al escribir el archivo: ${e.message}")
+    fun obtenerDatos(clave: String): String {
+        // Simula una operación costosa (ej., lectura de base de datos)
+        Thread.sleep(500)
+        return "Datos para $clave desde la fuente"
     }
 
-    // 2. Lectura de un archivo
-    // Se verifica si el archivo existe antes de leer su contenido.
-    try {
-        val archivo = File(nombreArchivo)
-        if (archivo.exists()) {
-            val contenidoLeido = archivo.readText()
-            println("Contenido del archivo '$nombreArchivo':\n$contenidoLeido")
-        } else {
-            println("El archivo '$nombreArchivo' no existe.")
-        }
-    } catch (e: IOException) {
-        println("Error al leer el archivo: ${e.message}")
-    }
+    println("Primera solicitud para 'elemento1': ${miCache.obtener("elemento1") { obtenerDatos("elemento1") }}")
+    println("Segunda solicitud para 'elemento1': ${miCache.obtener("elemento1") { obtenerDatos("elemento1") }}") // Se servirá desde la caché
 
-    // 3. Agregar contenido a un archivo existente
-    // Se añade una línea adicional al archivo sin sobrescribir el contenido previo.
-    try {
-        File(nombreArchivo).appendText("\nEsta es una línea adicional.")
-        println("Contenido agregado al archivo '$nombreArchivo'.")
-    } catch (e: IOException) {
-        println("Error al agregar contenido al archivo: ${e.message}")
-    }
+    println("Primera solicitud para 'elemento2': ${miCache.obtener("elemento2") { obtenerDatos("elemento2") }}")
 
-    // 4. Leer el archivo línea por línea (usando useLines)
-    // Se usa useLines para leer y procesar el archivo línea por línea.
-    try {
-        File(nombreArchivo).useLines { lines ->
-            lines.forEach { linea ->
-                println(linea)
-            }
-        }
-    } catch (e: IOException) {
-        println("Error al leer el archivo línea por línea: ${e.message}")
-    }
+    miCache.invalidar("elemento1")
 
-    // 5. Eliminar el archivo
-    // Se elimina el archivo después de haberlo utilizado.
-    try {
-        File(nombreArchivo).delete()
-        println("Archivo '$nombreArchivo' eliminado.")
-    } catch (e: IOException) {
-        println("Error al eliminar el archivo: ${e.message}")
-    }
+    println("Tercera solicitud para 'elemento1' después de invalidar: ${miCache.obtener("elemento1") { obtenerDatos("elemento1") }}") // Se volverá a obtener
 }
