@@ -75,6 +75,7 @@ fun mostrarAyuda() {
 
 
 ### Escribe una nota del cómo funciona la estructura  
+R//
 import kotlin.system.exitProcess
 
 /**
@@ -141,4 +142,3 @@ fun sumarNumeros(args: Array<String>) {
         exitProcess(1)
     }
 }
-
