@@ -1,60 +1,95 @@
-import java.io.File
-import java.io.IOException
+import kotlin.system.exitProcess
 
-fun main() {
-    val nombreArchivo = "miarchivo.txt"
-    val contenido = "Hola, mundo! Esto es un ejemplo de manejo de archivos en Kotlin."
+fun main(args: Array<String>) {
+    // La función `main` es el punto de entrada de la aplicación Kotlin.
+    // Recibe un array de strings (`args`) que representan los argumentos de la línea de comandos.
 
-    // 1. Escritura de un archivo
-    // Se crea un archivo y se escribe contenido en él.
-    try {
-        File(nombreArchivo).writeText(contenido)
-        println("Archivo '$nombreArchivo' escrito correctamente.")
-    } catch (e: IOException) {
-        println("Error al escribir el archivo: ${e.message}")
+    // Primero, se verifica si no se proporcionaron argumentos al ejecutar el programa.
+    if (args.isEmpty()) {
+        // Si no hay argumentos, se llama a la función `mostrarAyuda()` para mostrar las instrucciones de uso.
+        mostrarAyuda()
+        // Luego, se termina la ejecución del programa con un código de salida 0, indicando una terminación exitosa.
+        exitProcess(0)
     }
 
-    // 2. Lectura de un archivo
-    // Se verifica si el archivo existe antes de leer su contenido.
-    try {
-        val archivo = File(nombreArchivo)
-        if (archivo.exists()) {
-            val contenidoLeido = archivo.readText()
-            println("Contenido del archivo '$nombreArchivo':\n$contenidoLeido")
-        } else {
-            println("El archivo '$nombreArchivo' no existe.")
+    // Si hay argumentos, se utiliza una estructura `when` (similar a un switch en otros lenguajes)
+    // para determinar qué acción realizar basándose en el primer argumento proporcionado.
+    when (args[0].lowercase()) {
+        // Se convierte el primer argumento a minúsculas para hacer la comparación insensible a mayúsculas.
+
+        // Si el primer argumento es "saludar":
+        "saludar" -> saludarUsuario(args) // Se llama a la función `saludarUsuario` y se le pasa el array de argumentos.
+
+        // Si el primer argumento es "sumar":
+        "sumar" -> sumarNumeros(args) // Se llama a la función `sumarNumeros` y se le pasa el array de argumentos.
+
+        // Si el primer argumento es "--help" o "-h":
+        "--help", "-h" -> mostrarAyuda() // Se llama a la función `mostrarAyuda()` para mostrar la ayuda.
+
+        // Si el primer argumento no coincide con ninguno de los casos anteriores:
+        else -> {
+            // Se imprime un mensaje indicando que el comando no se reconoce, mostrando el argumento inválido.
+            println("Comando no reconocido: ${args[0]}")
+            // Se llama a la función `mostrarAyuda()` para recordar al usuario los comandos válidos.
+            mostrarAyuda()
+            // Se termina la ejecución del programa con un código de salida 1, indicando que hubo un error.
+            exitProcess(1)
         }
-    } catch (e: IOException) {
-        println("Error al leer el archivo: ${e.message}")
+    }
+}
+
+// Esta función se encarga de saludar al usuario.
+fun saludarUsuario(args: Array<String>) {
+    // Primero, se verifica si se proporcionó al menos un argumento además del comando "saludar" (es decir, el nombre).
+    if (args.size < 2) {
+        // Si no se proporciona un nombre, se muestra un mensaje de error indicando que falta el nombre.
+        println("Error: Falta el nombre para saludar")
+        // Se muestra la forma correcta de usar el comando "saludar".
+        println("Uso: saludar <nombre>")
+        // Se termina la ejecución del programa con un código de salida 1 debido al error.
+        exitProcess(1)
+    }
+    // Si se proporciona un nombre (está en la posición `args[1]`), se imprime un saludo personalizado.
+    println("¡Hola, ${args[1]}!")
+}
+
+// Esta función se encarga de sumar dos números proporcionados como argumentos.
+fun sumarNumeros(args: Array<String>) {
+    // Primero, se verifica si se proporcionaron al menos tres argumentos: el comando "sumar" y los dos números.
+    if (args.size < 3) {
+        // Si faltan números, se muestra un mensaje de error indicando que se necesitan dos números.
+        println("Error: Se necesitan dos números para sumar")
+        // Se muestra la forma correcta de usar el comando "sumar".
+        println("Uso: sumar <num1> <num2>")
+        // Se termina la ejecución del programa con un código de salida 1 debido al error.
+        exitProcess(1)
     }
 
-    // 3. Agregar contenido a un archivo existente
-    // Se añade una línea adicional al archivo sin sobrescribir el contenido previo.
+    // Se utiliza un bloque `try-catch` para manejar posibles errores al convertir los argumentos a números enteros.
     try {
-        File(nombreArchivo).appendText("\nEsta es una línea adicional.")
-        println("Contenido agregado al archivo '$nombreArchivo'.")
-    } catch (e: IOException) {
-        println("Error al agregar contenido al archivo: ${e.message}")
+        // Se intenta convertir el segundo argumento (`args[1]`) a un entero y se guarda en la variable `num1`.
+        val num1 = args[1].toInt()
+        // Se intenta convertir el tercer argumento (`args[2]`) a un entero y se guarda en la variable `num2`.
+        val num2 = args[2].toInt()
+        // Si las conversiones son exitosas, se calcula la suma y se muestra el resultado.
+        println("Resultado: ${num1 + num2}")
+    } catch (e: NumberFormatException) {
+        // Si ocurre una excepción `NumberFormatException` (por ejemplo, si los argumentos no son números),
+        // se entra en este bloque `catch`.
+        println("Error: Ambos argumentos deben ser números enteros")
+        // Se termina la ejecución del programa con un código de salida 1 debido al error de formato.
+        exitProcess(1)
     }
+}
 
-    // 4. Leer el archivo línea por línea (usando useLines)
-    // Se usa useLines para leer y procesar el archivo línea por línea.
-    try {
-        File(nombreArchivo).useLines { lines ->
-            lines.forEach { linea ->
-                println(linea)
-            }
-        }
-    } catch (e: IOException) {
-        println("Error al leer el archivo línea por línea: ${e.message}")
-    }
-
-    // 5. Eliminar el archivo
-    // Se elimina el archivo después de haberlo utilizado.
-    try {
-        File(nombreArchivo).delete()
-        println("Archivo '$nombreArchivo' eliminado.")
-    } catch (e: IOException) {
-        println("Error al eliminar el archivo: ${e.message}")
-    }
+// Esta función muestra la ayuda del programa, listando los comandos disponibles y su uso.
+fun mostrarAyuda() {
+    println("""
+    Uso: programa.kts [argumentos]
+    Comandos disponibles:
+      saludar <nombre>   - Saluda a la persona especificada
+      sumar <num1> <num2> - Suma dos números enteros
+      --help, -h        - Muestra esta ayuda
+    """.trimIndent())
+    // `trimIndent()` se utiliza para eliminar el margen común de las líneas dentro del string multilínea.
 }
