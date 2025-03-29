@@ -10,7 +10,7 @@ Kotlin puede integrarse con diversas herramientas y tecnologías para extender s
 
 2. **Genere un ejemplo internamente en el recuadro.**  
    - Utilice un editor de código para lograrlo.  
-R//
+R//     
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -24,13 +24,7 @@ object Users : Table() {
 
 fun main() {
     // Configuración de la conexión a la base de datos (H2 en memoria)
-    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-
-    transaction {
-        // Creación de la tabla
-        SchemaUtils.create(Users)
-
-        // Inserción de datos
+    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver"// Inserción de datos
         Users.insert {
             it[name] = "Juan Pérez"
             it[email] = "juan@example.com"
