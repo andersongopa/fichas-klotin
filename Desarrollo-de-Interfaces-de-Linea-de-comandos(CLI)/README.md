@@ -142,17 +142,3 @@ fun sumarNumeros(args: Array<String>) {
     }
 }
 
-/**
- * Función que muestra la ayuda de la aplicación
- * Nota: Usa texto multi-línea para mejor formato
- */
-fun mostrarAyuda() {
-    println("""
-        Uso: programa.kts <comando> [argumentos]
-        
-        Comandos disponibles:
-          saludar <nombre>   - Saluda a la persona especificada
-          sumar <num1> <num2> - Suma dos números enteros
-          --help, -h        - Muestra esta ayuda
-    """.trimIndent())  // trimIndent() para mantener indentación limpia
-}
